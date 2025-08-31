@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.model;
+package com.gtelant.commerce_admin_service.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,11 +22,13 @@ public class Segment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "segment_id")
     private long segmentId;
+
     @Column(name = "segment_name", nullable = false, length = 100)
     private String segmentName;
+
     @Column(name = "description",nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "segment")
+    @OneToMany(mappedBy = "segment", fetch = FetchType.LAZY)
     private List<UserSegment> userSegments = new ArrayList<>();
 }

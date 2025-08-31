@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.model;
+package com.gtelant.commerce_admin_service.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,12 +20,17 @@ public class UserSegment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne
     @JoinColumn(name = "segment_id", nullable = false)
     private Segment segment;
+//    下面兩行等同上面三行  上面是設計一個物件去做關聯，下面是用id去做關聯
+//    @Column(name = "segment_id", nullable = false)
+//    private long segmentId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

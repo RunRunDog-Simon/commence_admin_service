@@ -1,4 +1,4 @@
-package com.gtelant.commerce_admin_service.model;
+package com.gtelant.commerce_admin_service.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,38 +28,55 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private long user_id;
+    private long userId;
+
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
+
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
+
     @Column(name = "email", nullable = false, length = 255)
     private String email;
+
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
+
     @Column(name = "address", nullable = false, length = 255)
     private String address;
+
     @Column(name = "city", nullable = false, length = 100)
     private String city;
+
     @Column(name = "state", nullable = false, length = 100)
     private String state;
+
     @Column(name = "zipcode", nullable = false, length = 20)
     private String zipcode;
+
     @Column(name = "password", nullable = false, length = 255)
     private String password;
+
     @Column(name = "has_newsletter", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean hasNewsletter;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
     @Column(name = "last_seen_at")
     private LocalDateTime lastSeenAt;
 
-    @OneToMany(mappedBy = "user")
+    @Column(name = "role")
+    private String role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserSegment> userSegmentList = new ArrayList<>(); // 此處初始化
 }

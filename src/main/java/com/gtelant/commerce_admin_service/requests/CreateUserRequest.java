@@ -3,7 +3,6 @@ package com.gtelant.commerce_admin_service.requests;
 import java.time.LocalDate;
 
 public class CreateUserRequest {
-
     private String firstName;
     private String lastName;
     private String email;

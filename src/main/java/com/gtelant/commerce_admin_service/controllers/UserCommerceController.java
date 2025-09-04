@@ -1,19 +1,20 @@
 package com.gtelant.commerce_admin_service.controllers;
 import com.gtelant.commerce_admin_service.models.User;
-import com.gtelant.commerce_admin_service.repositories.UserCommerceRepo;
 import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
+import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
 import com.gtelant.commerce_admin_service.service.UserCommerceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user_commerce")
+@RequestMapping("/users")
 @CrossOrigin("*")
 @Tag(name = "Posters Galore 使用者控制盤")
 public class UserCommerceController {
@@ -23,11 +24,20 @@ public class UserCommerceController {
         this.userCommerceService = userCommerceService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<GetUserResponse>> findAllUsers(){
-        List<User> users = userCommerceService.findAllUsers();
-        return ResponseEntity.ok(users.stream().map(GetUserResponse::new).toList());
+    @GetMapping("/page")
+    public Page<GetUserResponse> getAllUserPage(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size
+    ){
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return userCommerceService.findAllUsers(pageRequest).map(GetUserResponse::new);
     }
+
+//    @GetMapping
+//    public ResponseEntity<List<GetUserResponse>> findAllUsers(){
+//        List<User> users = userCommerceService.findAllUsers();
+//        return ResponseEntity.ok(users.stream().map(GetUserResponse::new).toList());
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<GetUserResponse> findUserById(@PathVariable long id){
@@ -44,9 +54,25 @@ public class UserCommerceController {
         GetUserResponse response = userCommerceService.createUser(request);
         return ResponseEntity.ok(response);
     }
-//
-//    @DeleteMapping
-//
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateUserRequest> updateUserById(@PathVariable long id, @RequestBody UpdateUserRequest request){
+        Optional<User> user = userCommerceService.findUserById(id);
+        if(user.isPresent()){
+            userCommerceService.updateUserById(id, request);
+            return ResponseEntity.ok(request);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable long id){
+        if(userCommerceService.deleteUserById(id).hasBody()){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 //    @PutMapping
 }
 

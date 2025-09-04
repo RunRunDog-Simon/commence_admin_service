@@ -67,13 +67,13 @@ public class UserCommerceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable long id){
-        if(userCommerceService.deleteUserById(id).hasBody()){
-            return ResponseEntity.ok().build();
+        Optional<User> user = userCommerceService.findUserById(id);
+        if(user.isPresent()){
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-//    @PutMapping
 }
 
 

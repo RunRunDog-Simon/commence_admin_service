@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserCommerceService {
+public class UserService {
     private final UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserCommerceService(UserRepo userRepo){
+    public UserService(UserRepo userRepo){
         this.userRepo = userRepo;
     }
 

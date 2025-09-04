@@ -3,7 +3,7 @@ import com.gtelant.commerce_admin_service.models.User;
 import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
 import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
-import com.gtelant.commerce_admin_service.service.UserCommerceService;
+import com.gtelant.commerce_admin_service.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import java.util.Optional;
 @CrossOrigin("*")
 @Tag(name = "Posters Galore 使用者控制盤")
 public class UserController {
-    private final UserCommerceService userCommerceService;
+    private final UserService userService;
     @Autowired
-    public UserController(UserCommerceService userCommerceService) {
-        this.userCommerceService = userCommerceService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/page")
@@ -30,7 +30,7 @@ public class UserController {
         @RequestParam(defaultValue = "20") int size
     ){
         PageRequest pageRequest = PageRequest.of(page,size);
-        return userCommerceService.findAllUsers(pageRequest).map(GetUserResponse::new);
+        return userService.findAllUsers(pageRequest).map(GetUserResponse::new);
     }
 
 //    @GetMapping
@@ -41,7 +41,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetUserResponse> findUserById(@PathVariable long id){
-        Optional<User> user = userCommerceService.findUserById(id);
+        Optional<User> user = userService.findUserById(id);
         if(user.isPresent()){
             GetUserResponse response = new GetUserResponse(user.get());
             return ResponseEntity.ok(response);
@@ -51,15 +51,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<GetUserResponse> createUser(@RequestBody CreateUserRequest request){
-        GetUserResponse response = userCommerceService.createUser(request);
+        GetUserResponse response = userService.createUser(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UpdateUserRequest> updateUserById(@PathVariable long id, @RequestBody UpdateUserRequest request){
-        Optional<User> user = userCommerceService.findUserById(id);
+        Optional<User> user = userService.findUserById(id);
         if(user.isPresent()){
-            userCommerceService.updateUserById(id, request);
+            userService.updateUserById(id, request);
             return ResponseEntity.ok(request);
         }
         return ResponseEntity.notFound().build();
@@ -67,7 +67,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable long id){
-        Optional<User> user = userCommerceService.findUserById(id);
+        Optional<User> user = userService.findUserById(id);
         if(user.isPresent()){
             return ResponseEntity.noContent().build();
         }

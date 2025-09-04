@@ -1,7 +1,7 @@
 package com.gtelant.commerce_admin_service.service;
 
 import com.gtelant.commerce_admin_service.models.User;
-import com.gtelant.commerce_admin_service.repositories.UserCommerceRepo;
+import com.gtelant.commerce_admin_service.repositories.UserRepo;
 import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
 import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
@@ -18,20 +18,20 @@ import java.util.Optional;
 
 @Service
 public class UserCommerceService {
-    private final UserCommerceRepo userCommerceRepo;
+    private final UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserCommerceService(UserCommerceRepo userCommerceRepo){
-        this.userCommerceRepo = userCommerceRepo;
+    public UserCommerceService(UserRepo userRepo){
+        this.userRepo = userRepo;
     }
 
     public Page<User> findAllUsers(PageRequest pageRequest) {
-        return userCommerceRepo.findAll(pageRequest);
+        return userRepo.findAll(pageRequest);
     }
     public Optional<User> findUserById(long id){
-        Optional<User> user = userCommerceRepo.findById(id); //long int沒有重載?
+        Optional<User> user = userRepo.findById(id); //long int沒有重載?
         return user;
     }
 
@@ -48,21 +48,21 @@ public class UserCommerceService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setHasNewsletter(request.isHasNewsletter());
         user.setRole(request.getRole());
-        User savedUser = userCommerceRepo.save(user);
+        User savedUser = userRepo.save(user);
         GetUserResponse response = new GetUserResponse(savedUser);
         return response;
     }
 
     public ResponseEntity<Void> deleteUserById(long id) {
-        if(userCommerceRepo.existsById(id)){
-            userCommerceRepo.deleteById(id);
+        if(userRepo.existsById(id)){
+            userRepo.deleteById(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     public void updateUserById(Long id, UpdateUserRequest request) {
-        Optional<User> user = userCommerceRepo.findById(id);
+        Optional<User> user = userRepo.findById(id);
         user.get().setFirstName(request.getFirstName());
         user.get().setLastName(request.getLastName());
         user.get().setAddress(request.getAddress());
@@ -70,7 +70,7 @@ public class UserCommerceService {
         user.get().setState(request.getState());
         user.get().setZipcode(request.getZipcode());
         user.get().setHasNewsletter(request.isHasNewsletter());
-        User updatedUser = userCommerceRepo.save(user.get());
+        User updatedUser = userRepo.save(user.get());
         UpdateUserRequest response = new UpdateUserRequest(updatedUser);
     }
 }

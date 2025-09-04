@@ -10,17 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 @CrossOrigin("*")
 @Tag(name = "Posters Galore 使用者控制盤")
-public class UserCommerceController {
+public class UserController {
     private final UserCommerceService userCommerceService;
     @Autowired
-    public UserCommerceController(UserCommerceService userCommerceService) {
+    public UserController(UserCommerceService userCommerceService) {
         this.userCommerceService = userCommerceService;
     }
 

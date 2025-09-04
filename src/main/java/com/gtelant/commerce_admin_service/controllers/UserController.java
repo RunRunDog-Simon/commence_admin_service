@@ -74,6 +74,12 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    //Kermit
+    @PostMapping("/{id}/segment/{segmentId}")
+        public ResponseEntity<Void> assignSegmentByIdToUser(@PathVariable long id, @PathVariable long segmentId) {
+        userService.assignSegmentToUser(id, segmentId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
 

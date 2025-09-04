@@ -1,7 +1,11 @@
 package com.gtelant.commerce_admin_service.service;
 
+import com.gtelant.commerce_admin_service.models.Segment;
 import com.gtelant.commerce_admin_service.models.User;
+import com.gtelant.commerce_admin_service.models.UserSegment;
+import com.gtelant.commerce_admin_service.repositories.SegmentRepo;
 import com.gtelant.commerce_admin_service.repositories.UserRepo;
+import com.gtelant.commerce_admin_service.repositories.UserSegmentRepo;
 import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
 import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
@@ -19,12 +23,17 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepo userRepo;
+    private final SegmentRepo segmentRepo;
+    private final UserSegmentRepo userSegmentRepo;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepo){
+    public UserService(UserRepo userRepo, UserSegmentRepo userSegmentRepo, SegmentRepo segmentRepo){
         this.userRepo = userRepo;
+        this.userSegmentRepo = userSegmentRepo;
+        this.segmentRepo = segmentRepo;
     }
 
     public Page<User> findAllUsers(PageRequest pageRequest) {
@@ -72,5 +81,18 @@ public class UserService {
         user.get().setHasNewsletter(request.isHasNewsletter());
         User updatedUser = userRepo.save(user.get());
         UpdateUserRequest response = new UpdateUserRequest(updatedUser);
+    }
+
+    //Kermit
+    public void assignSegmentToUser(long id, long segmentId){
+        Optional<Segment> segment = segmentRepo.findById(segmentId);
+        Optional <User> user = userRepo.findById(id);
+
+        if(user.isPresent() && segment.isPresent()){
+            UserSegment userSegment = new UserSegment();
+            userSegment.setSegment(segment.get());
+            userSegment.setUser(user.get());
+            userSegmentRepo.save(userSegment);
+        }
     }
 }

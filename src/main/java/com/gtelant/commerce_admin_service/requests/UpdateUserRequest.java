@@ -1,20 +1,29 @@
-package com.gtelant.commerce_admin_service.requests;
+﻿package com.gtelant.commerce_admin_service.requests;
 
-import java.time.LocalDate;
+import com.gtelant.commerce_admin_service.models.User;
+import jakarta.persistence.Column;
 
-public class CreateUserRequest {
+public class UpdateUserRequest {
     private String firstName;
     private String lastName;
-    private String email;
-    private LocalDate birthday;
     private String address;
     private String city;
     private String state;
     private String zipcode;
-    private String password;
-    private boolean hasNewsletter;
-    private String role;
-    public CreateUserRequest() {
+    private  boolean hasNewsletter;
+
+    public UpdateUserRequest() {
+    }
+
+
+    public UpdateUserRequest(User user){
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.address = user.getAddress();
+        this.city = user.getCity();
+        this.state = user.getState();
+        this.zipcode = user.getZipcode();
+        this.hasNewsletter = user.isHasNewsletter();
     }
 
     public String getFirstName() {
@@ -31,22 +40,6 @@ public class CreateUserRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
     }
 
     public String getAddress() {
@@ -81,27 +74,11 @@ public class CreateUserRequest {
         this.zipcode = zipcode;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isHasNewsletter() {
         return hasNewsletter;
     }
 
     public void setHasNewsletter(boolean hasNewsletter) {
         this.hasNewsletter = hasNewsletter;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

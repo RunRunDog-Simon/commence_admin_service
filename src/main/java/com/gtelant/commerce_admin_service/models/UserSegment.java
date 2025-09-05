@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = @UniqueConstraint(name = "uk_user_segment",
                 columnNames = {"user_id", "segment_id"}) //確保 user_id + segment_id 不重複
 )
+@Where(clause = "deleted_at IS NULL")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor //包含此行以上三行可以取代建構子跟getter setter
@@ -21,10 +23,11 @@ public class UserSegment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // ()裡面是啥要確認
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "segment_id", nullable = false)
     private Segment segment;
 //    下面兩行等同上面三行  上面是設計一個物件去做關聯，下面是用id去做關聯

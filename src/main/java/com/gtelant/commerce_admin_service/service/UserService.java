@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,7 +37,10 @@ public class UserService {
         this.segmentRepo = segmentRepo;
     }
 
-    public Page<User> findAllUsers(PageRequest pageRequest) {
+    public List<User> findAllUsers(){
+        return userRepo.findAll();
+    }
+    public Page<User> findAllUsersPage(PageRequest pageRequest) {
         return userRepo.findAll(pageRequest);
     }
     public Optional<User> findUserById(long id){

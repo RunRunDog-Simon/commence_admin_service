@@ -1,8 +1,6 @@
 package com.gtelant.commerce_admin_service.models;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -78,5 +76,8 @@ public class User {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Where(clause = "deleted_at IS NULL")   // ✅ 自動忽略被軟刪的關聯
+    @ToString.Exclude                        // ✅ 防止 Lombok toString 遞迴
+    @EqualsAndHashCode.Exclude               // ✅ 防止 equals/hashCode 遞迴
     private List<UserSegment> userSegmentList = new ArrayList<>(); // 此處初始化
 }

@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.requests;
+package com.gtelant.commerce_admin_service.requests;
 
 public class CreateSegmentRequest {
     private String segmentName;

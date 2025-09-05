@@ -5,12 +5,14 @@ import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
 import com.gtelant.commerce_admin_service.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,14 +32,14 @@ public class UserController {
         @RequestParam(defaultValue = "20") int size
     ){
         PageRequest pageRequest = PageRequest.of(page,size);
-        return userService.findAllUsers(pageRequest).map(GetUserResponse::new);
+        return userService.findAllUsersPage(pageRequest).map(GetUserResponse::new);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<GetUserResponse>> findAllUsers(){
-//        List<User> users = userCommerceService.findAllUsers();
-//        return ResponseEntity.ok(users.stream().map(GetUserResponse::new).toList());
-//    }
+    @GetMapping
+    public ResponseEntity<List<GetUserResponse>> findAllUsers(){
+        List <User> users = userService.findAllUsers();
+        return ResponseEntity.ok(users.stream().map(GetUserResponse::new).toList());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<GetUserResponse> findUserById(@PathVariable long id){

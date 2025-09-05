@@ -1,7 +1,10 @@
-﻿package com.gtelant.commerce_admin_service.service;
+package com.gtelant.commerce_admin_service.service;
 
 import com.gtelant.commerce_admin_service.models.Segment;
 import com.gtelant.commerce_admin_service.repositories.SegmentRepo;
+import com.gtelant.commerce_admin_service.requests.CreateSegmentRequest;
+import com.gtelant.commerce_admin_service.responses.GetSegmentResponse;
+import com.gtelant.commerce_admin_service.responses.GetUserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,4 +22,12 @@ public class SegmentService {
         return segmentRepo.findAll(pageRequest);
     }
 
+    public GetSegmentResponse createSegment(CreateSegmentRequest request) {
+        Segment segment = new Segment();
+        segment.setSegmentName(request.getSegmentName());
+        segment.setDescription(request.getDescription());
+        Segment saveSegment = segmentRepo.save(segment);
+        GetSegmentResponse response = new GetSegmentResponse(saveSegment);
+        return response;
+    }
 }

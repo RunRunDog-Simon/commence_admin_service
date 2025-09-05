@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.responses;
+package com.gtelant.commerce_admin_service.responses;
 
 import com.gtelant.commerce_admin_service.models.UserSegment;
 

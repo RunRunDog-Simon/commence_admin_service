@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = @UniqueConstraint(name = "uk_user_segment",
                 columnNames = {"user_id", "segment_id"}) //確保 user_id + segment_id 不重複
 )
+@SQLDelete(sql = "UPDATE user_segment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 @Data
 @NoArgsConstructor

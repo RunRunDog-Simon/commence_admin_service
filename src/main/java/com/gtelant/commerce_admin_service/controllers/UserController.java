@@ -69,11 +69,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable long id){
-        Optional<User> user = userService.findUserById(id);
-        if(user.isPresent()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        return userService.deleteUserById(id);
     }
 
     //Kermit

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin("*")
+@CrossOrigin("*") //為何kermit沒有????
 @Tag(name = "Posters Galore 使用者控制盤")
 public class UserController {
     private final UserService userService;
@@ -27,13 +27,26 @@ public class UserController {
     }
 
     @GetMapping("/page")
-    public Page<GetUserResponse> getAllUserPage(
+    public Page<GetUserResponse> findAllUserPage(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ){
         PageRequest pageRequest = PageRequest.of(page,size);
         return userService.findAllUsersPage(pageRequest).map(GetUserResponse::new);
     }
+
+//    @GetMapping("/searchPage")
+//    public Page<GetUserResponse> getAllUsersPage(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size,
+//            @RequestParam(defaultValue = "") String query,
+//            @RequestParam(required = false) Long segmentId,
+//            @RequestParam(required = false) Boolean hasNewsletter
+//    ) {
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//        return userService.searchAllUsers(query, segmentId, hasNewsletter,pageRequest)
+//                .map(GetUserResponse::new);
+//    }
 
     @GetMapping
     public ResponseEntity<List<GetUserResponse>> findAllUsers(){
@@ -58,14 +71,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateUserRequest> updateUserById(@PathVariable long id, @RequestBody UpdateUserRequest request){
+    public ResponseEntity<GetUserResponse> updateUserById(@PathVariable long id, @RequestBody UpdateUserRequest request){
         Optional<User> user = userService.findUserById(id);
         if(user.isPresent()){
-            userService.updateUserById(id, request);
-            return ResponseEntity.ok(request);
+            GetUserResponse response = userService.updateUserById(id, request);
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
-    }
+    }  //return GetUserResponse or UpdateUserRequest ?
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable long id){

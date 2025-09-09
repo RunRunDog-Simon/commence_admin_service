@@ -10,14 +10,18 @@ import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
 import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +47,40 @@ public class UserService {
     public Page<User> findAllUsersPage(PageRequest pageRequest) {
         return userRepo.findAll(pageRequest);
     }
+
+
+    private Specification<User> userSpecification(String queryName, Boolean hasNewsletter, Integer segmentId) {
+        return ((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            // if predicates.size() = 3 how many "AND"? => 2
+            //if predicates.size() = 8  how many "AND"? => 7
+
+            if(queryName != null && !queryName.isEmpty()) {
+                predicates.add(criteriaBuilder.or(
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%"+ queryName.toLowerCase()+"%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%"+ queryName.toLowerCase()+"%")
+                ));
+            }
+            if(hasNewsletter != null) {
+                predicates.add(criteriaBuilder.equal(root.get("hasNewsletter"), hasNewsletter));
+            }
+
+            if(segmentId != null) {
+                Join<User , UserSegment> userUserSegmentJoin = root.join("userSegments");
+                predicates.add(criteriaBuilder.equal(userUserSegmentJoin.get("segment").get("id"), segmentId));
+
+                //如果 userSegment有 屬性segmentId 則可以直接使用
+                //predicates.add(criteriaBuilder.equal(userUserSegmentJoin.get("segmentId"), segmentId));
+
+                //如果欲查詢Segment參數為字串（name）=> segmentName
+                //predicates.add(criteriaBuilder.equal(userUserSegmentJoin.get("segment").get("name"), segmentName)
+            }
+
+            Predicate[] predicateArray = predicates.toArray(new Predicate[0]);
+            return criteriaBuilder.and(predicateArray);
+        });
+    }
+
     public Optional<User> findUserById(long id){
         Optional<User> user = userRepo.findById(id); //long int沒有重載?
         return user;
@@ -74,7 +112,7 @@ public class UserService {
         return ResponseEntity.notFound().build();
     }
 
-    public void updateUserById(Long id, UpdateUserRequest request) {
+    public GetUserResponse updateUserById(Long id, UpdateUserRequest request) {
         Optional<User> user = userRepo.findById(id);
         user.get().setFirstName(request.getFirstName());
         user.get().setLastName(request.getLastName());
@@ -84,7 +122,8 @@ public class UserService {
         user.get().setZipcode(request.getZipcode());
         user.get().setHasNewsletter(request.isHasNewsletter());
         User updatedUser = userRepo.save(user.get());
-        UpdateUserRequest response = new UpdateUserRequest(updatedUser);
+        GetUserResponse response = new GetUserResponse(updatedUser);
+        return  response;
     }
 
     //Kermit
@@ -99,4 +138,5 @@ public class UserService {
             userSegmentRepo.save(userSegment);
         }
     }
+
 }

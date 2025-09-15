@@ -1,6 +1,7 @@
-﻿package com.gtelant.commerce_admin_service.requests;
+package com.gtelant.commerce_admin_service.requests;
 
 import com.gtelant.commerce_admin_service.models.Category;
+import com.gtelant.commerce_admin_service.models.Poster;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,5 +16,5 @@ public class CreatePosterRequest {
     private String imageUrl;
     private String thumbnailUrl;
     private String description;
-    private Category category;
+    private Long categoryId;
 }

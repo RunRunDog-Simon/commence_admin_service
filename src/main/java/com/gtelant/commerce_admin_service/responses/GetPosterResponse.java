@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.responses;
+package com.gtelant.commerce_admin_service.responses;
 
 import com.gtelant.commerce_admin_service.models.Category;
 import com.gtelant.commerce_admin_service.models.Poster;
@@ -35,5 +35,19 @@ public class GetPosterResponse {
         this.thumbnailUrl = poster.getThumbnailUrl();
         this.description = poster.getDescription();
         this.category = poster.getCategory();
+    }
+
+    public GetPosterResponse(Poster poster, Category category){
+        this.posterId = poster.getPosterId();
+        this.posterName = poster.getPosterName();
+        this.width = poster.getWidth();
+        this.height = poster.getHeight();
+        this.price = poster.getPrice();
+        this.stock = poster.getStock();
+        this.reference = poster.getReference();
+        this.imageUrl = poster.getImageUrl();
+        this.thumbnailUrl = poster.getThumbnailUrl();
+        this.description = poster.getDescription();
+        this.category = category;
     }
 }

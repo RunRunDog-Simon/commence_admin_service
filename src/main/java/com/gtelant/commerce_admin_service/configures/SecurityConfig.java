@@ -26,20 +26,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Swagger 用 POST/PUT 會被 CSRF 擋，開發期先關
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {}) // 如需 CORS，就留著
                 .authorizeHttpRequests(auth -> auth
-                        // 允許 Swagger
-                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        // 目前開發中的 API（可依需要調整）
-                        .requestMatchers("/users/**", "/segments/**", "/user-segments/**").permitAll()
-                        // 其它仍需驗證
+                        // Swagger
+                        .requestMatchers(
+                                "/swagger-ui.html", "/swagger-ui/**",
+                                "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**"
+                        ).permitAll()
+
+                        // 讓前端的預檢 OPTIONS 通過（保險起見）
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 很重要：錯誤頁面與常見靜態資源
+                        .requestMatchers("/error", "/", "/favicon.ico").permitAll()
+
+                        // 你目前開發中的 API
+                        .requestMatchers(
+                                "/users/**", "/segments/**", "/user-segments/**",
+                                "/posters/**", "/categories/**"   // ← categories 補成 /** 比較保險
+                        ).permitAll()
+
+                        // 其它仍要驗證
                         .anyRequest().authenticated()
                 )
-                // 簡單一點，用 HTTP Basic（不顯示登入頁）
-                .httpBasic(basic -> {});
+                .httpBasic(basic -> {}); // 開發期暫用 Basic
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

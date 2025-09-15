@@ -49,7 +49,7 @@ public class UserService {
     }
 
 
-    private Specification<User> userSpecification(String queryName, Boolean hasNewsletter, Integer segmentId) {
+    private Specification<User> userSpecification(String queryName, Boolean hasNewsletter, Long segmentId) {
         return ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             // if predicates.size() = 3 how many "AND"? => 2
@@ -139,4 +139,7 @@ public class UserService {
         }
     }
 
+    public Page<User> searchUsers(String query, Long segmentId, Boolean hasNewsletter, PageRequest pageRequest) {
+        return userRepo.findAll(userSpecification(query,hasNewsletter, segmentId), pageRequest);
+    }
 }

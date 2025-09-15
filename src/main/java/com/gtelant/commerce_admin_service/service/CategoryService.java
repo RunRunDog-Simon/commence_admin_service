@@ -34,7 +34,8 @@ public class CategoryService {
     public GetCategoryResponse createCategory(CreateCategoryRequest request) {
         Category category = new Category();
         category.setCategoryName(request.getCategoryName());
-        GetCategoryResponse response = new GetCategoryResponse(category);
+        Category createdCategory = categoryRepo.save(category);
+        GetCategoryResponse response = new GetCategoryResponse(createdCategory);
         return response;
     }
 
@@ -54,4 +55,5 @@ public class CategoryService {
         }
         return ResponseEntity.notFound().build();
     }
+
 }

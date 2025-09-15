@@ -30,65 +30,10 @@ public class PosterController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<GetPosterResponse>> findAllPosters(){
-        List <Poster> posters = posterService.findAllPosters();
-        return ResponseEntity.ok(posters.stream().map(GetPosterResponse::new).toList());
-    }
-
-    @GetMapping("/page")
-    public Page<GetPosterResponse> findAllPostersPage(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ){
-        PageRequest pageRequest = PageRequest.of(page,size);
-        return posterService.findAllPostersPage(pageRequest).map(GetPosterResponse::new);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<GetPosterResponse> findPosterById(@PathVariable long id){
-        Optional<Poster> poster = posterService.findPosterById(id);
-        if(poster.isPresent()){
-            GetPosterResponse response = new GetPosterResponse(poster.get());
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-//    因為有兩個相同的RequestBody 所以不給過
-//    @PostMapping
-//    public ResponseEntity<GetPosterResponse> createPoster(@RequestBody CreatePosterRequest request){
-//        GetPosterResponse response = posterService.createPoster(request);
-//        return ResponseEntity.ok(response);
-//    }
-
-    @PostMapping
-    public ResponseEntity<GetPosterResponse> createPosterWithCategory(@RequestBody CreatePosterRequest request){
-        Category category = categoryService.findCategoryById(request.getCategoryId()).get();
-        GetPosterResponse response = posterService.createPosterWithCategory(request,category);
-        return  ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<GetPosterResponse> updatePosterById(@PathVariable long id, @RequestBody UpdatePosterRequest request){
-        Optional<Poster> poster = posterService.findPosterById(id);
-        if(poster.isPresent()){
-            GetPosterResponse response = posterService.updatePosterById(id, request);
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePosterById(@PathVariable long id){
-        return posterService.deletePosterById(id);
-    }
-
-
     //下面照搬kermit
     @Operation(summary = "Get all product pagination", description = "Returns a page of products")
     @GetMapping("/page")
-    public Page<GetPosterResponse> searchAllPostersPage(
+    public Page<GetPosterResponse> findAllPostersPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String query,
@@ -99,6 +44,30 @@ public class PosterController {
         PageRequest pageRequest = PageRequest.of(page, size);
         return posterService.searchPosters(query, categoryId, stockFrom, stockTo, pageRequest)
                 .map(GetPosterResponse::new);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<GetPosterResponse> findPosterById(@PathVariable long id){
+        return ResponseEntity.ok(posterService.findPosterById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<GetPosterResponse> createPoster(@RequestBody CreatePosterRequest request){
+        GetPosterResponse response = posterService.createPoster(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GetPosterResponse> updatePosterById(
+            @PathVariable long id,
+            @RequestBody UpdatePosterRequest request){
+            GetPosterResponse response = posterService.updatePosterById(id, request);
+            return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePosterById(@PathVariable long id){
+        posterService.deletePosterById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -32,7 +32,7 @@ public class PosterService {
         this.categoryRepo = categoryRepo;
     }
 
-    public Page<Poster> findAllPostersPage(String queryName, Long categoryId, Integer stockFrom, Integer stockTo, PageRequest pageRequest){
+    public Page<Poster> findPostersPage(String queryName, Long categoryId, Integer stockFrom, Integer stockTo, PageRequest pageRequest){
         Specification<Poster> spec = posterSpecification(queryName, categoryId, stockFrom, stockTo);
         return posterRepo.findAll(spec, pageRequest);
     }

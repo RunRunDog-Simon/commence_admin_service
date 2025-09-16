@@ -1,7 +1,5 @@
 package com.gtelant.commerce_admin_service.controllers;
 
-import com.gtelant.commerce_admin_service.models.Category;
-import com.gtelant.commerce_admin_service.models.Poster;
 import com.gtelant.commerce_admin_service.requests.CreatePosterRequest;
 import com.gtelant.commerce_admin_service.requests.UpdatePosterRequest;
 import com.gtelant.commerce_admin_service.responses.GetPosterResponse;
@@ -14,8 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/posters")
@@ -33,7 +30,7 @@ public class PosterController {
     //下面照搬kermit
     @Operation(summary = "Get all product pagination", description = "Returns a page of products")
     @GetMapping("/page")
-    public Page<GetPosterResponse> findAllPostersPage(
+    public Page<GetPosterResponse> findPostersPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String query,

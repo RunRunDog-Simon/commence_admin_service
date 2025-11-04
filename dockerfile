@@ -1,8 +1,12 @@
-FROM eclipse-temurin:17-jre
-
+FROM maven:3.8-openjdk-17 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-COPY target/commerce_admin_service-0.0.1-SNAPSHOT.jar /app/commerce_admin_service.jar
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /app/target/commerce_admin_service-0.0.1-SNAPSHOT.jar /app/commerce_admin_service.jar
 
 EXPOSE 8080
 

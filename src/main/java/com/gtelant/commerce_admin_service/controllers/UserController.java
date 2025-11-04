@@ -4,6 +4,8 @@ import com.gtelant.commerce_admin_service.requests.CreateUserRequest;
 import com.gtelant.commerce_admin_service.requests.UpdateUserRequest;
 import com.gtelant.commerce_admin_service.responses.GetUserResponse;
 import com.gtelant.commerce_admin_service.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.data.domain.Page;
@@ -31,10 +33,11 @@ public class UserController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ){
-        PageRequest pageRequest = PageRequest.of(page,size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         return userService.findAllUsersPage(pageRequest).map(GetUserResponse::new);
     }
 
+    @Operation(security = @SecurityRequirement( name = "bearerAuth"))
     @GetMapping("/searchPage")
     public Page<GetUserResponse> searchUsersPage(
             @RequestParam(defaultValue = "0") int page,
@@ -70,7 +73,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<GetUserResponse> updateUserById(@PathVariable long id, @RequestBody UpdateUserRequest request){
         Optional<User> user = userService.findUserById(id);
         if(user.isPresent()){
@@ -78,7 +81,7 @@ public class UserController {
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
-    }  //return GetUserResponse or UpdateUserRequest ?
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable long id){

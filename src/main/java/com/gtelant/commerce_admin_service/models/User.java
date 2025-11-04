@@ -56,7 +56,7 @@ public class User {
     private String password;
 
     @Column(name = "has_newsletter", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean hasNewsletter;
+    private boolean hasNewsletter; //這邊要改大寫BOOLEAN?
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

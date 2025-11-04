@@ -70,4 +70,7 @@ public class ReviewService {
     public List<Review> updateReviews(List<Review> reviews) {
         return reviewRepo.saveAll(reviews);
     }
+
+    //create 呼叫repo.save update 呼叫repo.saveAll
+    //區別在於...save用id判斷
 }

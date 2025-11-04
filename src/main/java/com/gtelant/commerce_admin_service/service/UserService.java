@@ -82,7 +82,7 @@ public class UserService {
     }
 
     public Optional<User> findUserById(long id){
-        Optional<User> user = userRepo.findById(id); //long int沒有重載?
+        Optional<User> user = userRepo.findById(id);
         return user;
     }
 

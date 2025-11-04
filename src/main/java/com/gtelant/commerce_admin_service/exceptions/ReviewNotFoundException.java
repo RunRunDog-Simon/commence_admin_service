@@ -1,4 +1,4 @@
-﻿package com.gtelant.commerce_admin_service.exceptions;
+package com.gtelant.commerce_admin_service.exceptions;
 
 
 import org.springframework.http.HttpStatus;
